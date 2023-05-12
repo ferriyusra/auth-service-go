@@ -21,7 +21,7 @@ This project is developed with:
 Clone the project
 
 ```bash
-git clone <todo>
+git clone https://github.com/ferriyusra/auth-service-go
 ```
 
 Go to the project directory
