@@ -1,0 +1,6 @@
+migrate -path=migrations -database "postgres://ferri@127.0.0.1:5432/auth_service_go?sslmode=disable" up
+
+# to rollback
+migrate -path=migrations -database "postgres://ferri@127.0.0.1:5432/auth_service_go?sslmode=disable" down i -> 1/2/3
+
+$ migrate -source file://path/to/migrations -database postgres://localhost:5432/database up 2
