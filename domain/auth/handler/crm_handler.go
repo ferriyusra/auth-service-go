@@ -2,14 +2,18 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
-
+	Config "skegsTech/auth-service-go/config"
 	"skegsTech/auth-service-go/domain/auth/entity"
 	"skegsTech/auth-service-go/domain/auth/request"
 	"skegsTech/auth-service-go/domain/auth/service"
 	"skegsTech/auth-service-go/logger"
 	"skegsTech/auth-service-go/util"
+	"strconv"
+	"time"
 
+	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -24,6 +28,13 @@ func NewCrmAuthHandler(sv service.AuthService) CrmAuthHandler {
 }
 
 func (c *crmAuthHandler) Register(w http.ResponseWriter, r *http.Request) {
+
+	//  init config
+	config, err := Config.New()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	
 	ctx := r.Context()
 
 	// get payload
@@ -56,7 +67,21 @@ func (c *crmAuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	util.Success(w, http.StatusOK, entityToResponse(user), "")
+	// generate JWT token
+	claims := &entity.Claims{
+		Id: strconv.Itoa(user.Id),
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+			Issuer:    user.Name,
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedToken, _ := token.SignedString([]byte(config.AuthJwtSecretCrm))
+
+	response := entityToResponse(user)
+	response["token"] = signedToken
+
+	util.Success(w, http.StatusOK, response, "")
 }
 
 func entityToResponse(user *entity.User) map[string]interface{} {
