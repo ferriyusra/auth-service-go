@@ -3,6 +3,7 @@ package entity
 import (
 	"time"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 )
 
@@ -15,6 +16,11 @@ type User struct {
     CreatedAt   time.Time      `json:"createdAt"`
     UpdatedAt   time.Time      `json:"updatedAt"`
     DeletedAt   *time.Time     `json:"deletedAt"`
+}
+
+type Claims struct {
+    Id string `json:"id"`
+    jwt.StandardClaims
 }
 
 func GetAccountSearcheables() []string {
