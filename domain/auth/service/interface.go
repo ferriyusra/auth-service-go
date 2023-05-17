@@ -8,5 +8,6 @@ import (
 )
 
 type AuthService interface {
-	Register(ctx context.Context, req *request.CreateAuthRequest) (*entity.User, error)
+	Create(ctx context.Context, req *request.CreateAuthRequest) (*entity.User, error)
+	Get(ctx context.Context, email string) (*entity.User, error)
 }

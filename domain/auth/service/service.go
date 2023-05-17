@@ -20,7 +20,7 @@ func NewService(repo repository.UserRepository) AuthService {
 	}
 }
 
-func (s *authService) Register(ctx context.Context, req *request.CreateAuthRequest) (*entity.User, error) {
+func (s *authService) Create(ctx context.Context, req *request.CreateAuthRequest) (*entity.User, error) {
 
 	user := &entity.User{
 		UniqueId:     uuid.New(),
@@ -29,10 +29,20 @@ func (s *authService) Register(ctx context.Context, req *request.CreateAuthReque
 		Password:    	req.Password,
 	}
 
-	res, err := s.repository.Register(ctx, user)
+	res, err := s.repository.Create(ctx, user)
 	if err != nil {
 		return nil, err
 	}
 
 	return res, nil
+}
+
+func (s *authService) Get(ctx context.Context, email string) (*entity.User, error) {
+
+	user, err := s.repository.Get(ctx, email)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

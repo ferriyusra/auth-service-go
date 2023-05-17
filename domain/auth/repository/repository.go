@@ -5,6 +5,7 @@ import (
 	"database/sql"
 
 	"skegsTech/auth-service-go/domain/auth/entity"
+	"skegsTech/auth-service-go/myerror"
 )
 
 type userRepository struct {
@@ -17,7 +18,7 @@ func NewRepository(db *sql.DB) UserRepository {
 	}
 }
 
-func (r *userRepository) Register(ctx context.Context, user *entity.User) (res *entity.User, err error) {
+func (r *userRepository) Create(ctx context.Context, user *entity.User) (res *entity.User, err error) {
 	
 	sql := `INSERT INTO users (unique_id, name, email, password)
 			VALUES ($1, $2, $3, $4)
@@ -38,4 +39,23 @@ func (r *userRepository) Register(ctx context.Context, user *entity.User) (res *
 	}
 
 	return user , nil
+}
+
+func (r *userRepository) Get(ctx context.Context, email string) (*entity.User, error) {
+	
+	sql := `SELECT u.id, u.unique_id, u.name, u.email, u.password FROM users u WHERE u.email = $1`
+
+	row := r.db.QueryRow(sql, email)
+	
+	user := entity.User{}
+	if err := row.Scan(
+		&user.Id,
+		&user.UniqueId,
+		&user.Name,
+		&user.Email,
+		&user.Password); err != nil {
+			return nil, myerror.ErrRecordNotFound
+	}
+
+	return &user , nil
 }
