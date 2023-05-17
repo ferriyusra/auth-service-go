@@ -29,8 +29,8 @@ func NewRouter(crmAuthHandler authHandler.CrmAuthHandler) *mux.Router {
 	// crm.Use(middleware.CrmAuthenticated) // user must be authenticated
 
 	crm.HandleFunc("/v1/auth/register", crmAuthHandler.Register).Methods("POST")
+	crm.HandleFunc("/v1/auth/login", crmAuthHandler.Login).Methods("POST")
 	// crm.HandleFunc("/v1/auth/profile", crmAuthHandler.List).Methods("GET")
-	// crm.HandleFunc("/v1/auth/login", crmAuthHandler.Create).Methods("POST")
 
 	return r
 }
