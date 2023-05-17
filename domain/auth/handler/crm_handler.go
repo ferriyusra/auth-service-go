@@ -12,7 +12,6 @@ import (
 	"skegsTech/auth-service-go/logger"
 	"skegsTech/auth-service-go/myerror"
 	"skegsTech/auth-service-go/util"
-	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -112,7 +111,7 @@ func (c *crmAuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	claims := &entity.Claims{
-		Id: strconv.Itoa(user.Id),
+		UserId: user.Id,
 		UserName: user.Name,
 		Email: user.Email,
 		StandardClaims: jwt.StandardClaims{
@@ -127,7 +126,31 @@ func (c *crmAuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	response := entityToResponse(user)
 	response["token"] = signedToken
 
-	util.Success(w, http.StatusOK, response, "")
+	util.Success(w, http.StatusOK, response, "Success Login")
+}
+
+func (c *crmAuthHandler) Profile(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	// get authenticated userId
+	userId, _ := util.GetAuthenticatedUserID(ctx)
+
+	// get user
+	user, err := c.service.GetById(ctx, userId)
+	if err != nil {
+		if errors.Is(err, myerror.ErrRecordNotFound) {
+			util.Error(w, http.StatusNotFound, nil, err.Error())
+			return
+		}
+		
+		logger.Error(ctx, err)
+		util.Errorf(w, http.StatusInternalServerError, nil, err)
+		return
+	}
+
+	response := entityToResponse(user)
+
+	util.Success(w, http.StatusOK, response, "Success Get Account")
 }
 
 func entityToResponse(user *entity.User) map[string]interface{} {

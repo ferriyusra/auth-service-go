@@ -15,7 +15,7 @@ func GetAuthenticatedUserID(ctx context.Context) (int64, error) {
 		return 0, errors.New("Invalid authenticated user")
 	}
 
-	return user.ID, nil
+	return user.Id, nil
 }
 
 // func GetAuthenticatedUserRole(ctx context.Context) (string, error) {

@@ -8,7 +8,7 @@ import (
 )
 
 type User struct {
-    Id          int            `json:"id"`
+    Id          int64            `json:"id"`
     UniqueId    uuid.UUID      `json:"uniqueId"`
     Name        string         `json:"name"`
     Email       string         `json:"email"`
@@ -19,7 +19,7 @@ type User struct {
 }
 
 type Claims struct {
-    Id string `json:"id"`
+    UserId int64 `json:"userId"`
     UserName string `json:"userName"`
     Email string `json:"email"`
     jwt.StandardClaims

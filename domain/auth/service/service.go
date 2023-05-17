@@ -46,3 +46,13 @@ func (s *authService) Get(ctx context.Context, email string) (*entity.User, erro
 
 	return user, nil
 }
+
+func (s *authService) GetById(ctx context.Context, id int64) (*entity.User, error) {
+
+	user, err := s.repository.GetById(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}

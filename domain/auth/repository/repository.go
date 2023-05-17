@@ -59,3 +59,22 @@ func (r *userRepository) Get(ctx context.Context, email string) (*entity.User, e
 
 	return &user , nil
 }
+
+func (r *userRepository) GetById(ctx context.Context, id int64) (*entity.User, error) {
+	
+	sql := `SELECT u.id, u.unique_id, u.name, u.email, u.password FROM users u WHERE u.id = $1`
+
+	row := r.db.QueryRow(sql, id)
+	
+	user := entity.User{}
+	if err := row.Scan(
+		&user.Id,
+		&user.UniqueId,
+		&user.Name,
+		&user.Email,
+		&user.Password); err != nil {
+			return nil, myerror.ErrRecordNotFound
+	}
+
+	return &user , nil
+}

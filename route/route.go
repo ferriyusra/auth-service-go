@@ -26,11 +26,14 @@ func NewRouter(crmAuthHandler authHandler.CrmAuthHandler) *mux.Router {
 
 	// crm endpoints or web app endpoints
 	crm := r.PathPrefix("/crm").Subrouter()
-	// crm.Use(middleware.CrmAuthenticated) // user must be authenticated
+
+	account := r.PathPrefix("/account").Subrouter()
+	account.Use(middleware.CrmAuthenticated) // user must be authenticated
 
 	crm.HandleFunc("/v1/auth/register", crmAuthHandler.Register).Methods("POST")
 	crm.HandleFunc("/v1/auth/login", crmAuthHandler.Login).Methods("POST")
-	// crm.HandleFunc("/v1/auth/profile", crmAuthHandler.List).Methods("GET")
+
+	account.HandleFunc("/v1/profile", crmAuthHandler.Profile).Methods("GET")
 
 	return r
 }

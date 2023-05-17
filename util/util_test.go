@@ -13,7 +13,7 @@ func TestGetAuthenticatedUserID(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		userId := int64(100)
 		user := &entity.AuthenticatedUser{
-			ID: userId,
+			Id: userId,
 		}
 
 		ctx := context.WithValue(context.TODO(), "user", user)

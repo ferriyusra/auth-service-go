@@ -67,7 +67,7 @@ func CrmAuthenticated(next http.Handler) http.Handler {
 		}
 
 		user := &entity.AuthenticatedUser{
-			ID: userID,
+			Id: userID,
 		}
 
 		ctx := context.WithValue(r.Context(), "user", user)
@@ -78,12 +78,12 @@ func CrmAuthenticated(next http.Handler) http.Handler {
 }
 
 func getUserIdFromJwt(js map[string]interface{}) (int64, error) {
-	data, ok := js["data"].(map[string]interface{})
-	if !ok {
-		return 0, errors.New("Invalid CRM Token")
-	}
+	// data, ok := js["userId"].(map[string]interface{})
+	// if !ok {
+	// 	return 0, errors.New("Invalid CRM Token")
+	// }
 
-	if val, ok := data["userId"]; ok {
+	if val, ok := js["userId"]; ok {
 		// interface{} (for JSON numbers) will be converted to float64
 		userID := int64(val.(float64))
 
