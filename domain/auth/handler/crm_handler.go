@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	Config "skegsTech/auth-service-go/config"
@@ -134,6 +135,7 @@ func (c *crmAuthHandler) Profile(w http.ResponseWriter, r *http.Request) {
 
 	// get authenticated userId
 	userId, _ := util.GetAuthenticatedUserID(ctx)
+	fmt.Println(userId)
 
 	// get user
 	user, err := c.service.GetById(ctx, userId)

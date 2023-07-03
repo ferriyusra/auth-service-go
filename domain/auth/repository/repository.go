@@ -43,7 +43,7 @@ func (r *userRepository) Create(ctx context.Context, user *entity.User) (res *en
 
 func (r *userRepository) Get(ctx context.Context, email string) (*entity.User, error) {
 	
-	sql := `SELECT u.id, u.unique_id, u.name, u.email, u.password FROM users u WHERE u.email = $1`
+	sql := `SELECT u.id, u.unique_id, u.name, u.email, u.password, u.created_at, u.updated_at FROM users u WHERE u.email = $1`
 
 	row := r.db.QueryRow(sql, email)
 	
@@ -53,7 +53,9 @@ func (r *userRepository) Get(ctx context.Context, email string) (*entity.User, e
 		&user.UniqueId,
 		&user.Name,
 		&user.Email,
-		&user.Password); err != nil {
+		&user.Password,
+		&user.CreatedAt,
+		&user.UpdatedAt); err != nil {
 			return nil, myerror.ErrRecordNotFound
 	}
 
@@ -62,7 +64,7 @@ func (r *userRepository) Get(ctx context.Context, email string) (*entity.User, e
 
 func (r *userRepository) GetById(ctx context.Context, id int64) (*entity.User, error) {
 	
-	sql := `SELECT u.id, u.unique_id, u.name, u.email, u.password FROM users u WHERE u.id = $1`
+	sql := `SELECT u.id, u.unique_id, u.name, u.email, u.password, u.created_at, u.updated_at FROM users u WHERE u.id = $1 AND u.deleted_at IS NULL`
 
 	row := r.db.QueryRow(sql, id)
 	
@@ -72,7 +74,9 @@ func (r *userRepository) GetById(ctx context.Context, id int64) (*entity.User, e
 		&user.UniqueId,
 		&user.Name,
 		&user.Email,
-		&user.Password); err != nil {
+		&user.Password,
+		&user.CreatedAt,
+		&user.UpdatedAt); err != nil {
 			return nil, myerror.ErrRecordNotFound
 	}
 
